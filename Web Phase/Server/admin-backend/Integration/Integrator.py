@@ -2,6 +2,9 @@ from .Decomposer import Decomposer
 from .Ensembler import ModelProcessor
 from .Variables import *
 import json
+from moviepy.editor import VideoFileClip
+from scipy.io import wavfile
+
 class Integrator:
     def __init__(self):
         print("⚡⚡⚡⚡Integrator is initialized⚡⚡⚡⚡")
@@ -60,6 +63,25 @@ class Integrator:
         text_vector=self.preProcessor.textArrayProcessor(self.text_vectorizer,text_array)
         self.audio_predictions=self.emotionPredictor.getAudioPredictions(self.audio_model,mfcc_values)
         self.text_predictions=self.emotionPredictor.getTextualPredictions(self.text_model,text_vector)
+    def getWordCountStats(self):
+        with open(self.output_transcript_file_path) as file:
+            text_array=json.load(file)
+        total_sentences=len(text_array)
+        total_words=len(" ".join(text_array).split(" "))
+        if self.video_file_name!="":
+            video_clip=VideoFileClip(self.video_file_name)
+            total_time=video_clip.duration
+            speed_per_minute=total_words/total_time*60
+        else:
+            sample_rate, data = wavfile.read(self.audio_file_path)
+            time= len(data) / sample_rate
+            speed_per_minute=total_words/time*60
+        return {
+            total_sentences:total_sentences,
+            total_words:total_words,
+            speed_per_minute:speed_per_minute
+        }
+
     @staticmethod
     def getInterviewResult(positives,negatives,neutrals,total,success_factor=0.6):
         if (positives+neutrals)/total>success_factor:
@@ -74,7 +96,12 @@ class Integrator:
         text_vector=self.preProcessor.textArrayProcessor(self.text_vectorizer,text_array)
         self.text_predictions=self.emotionPredictor.getTextualPredictions(self.text_model,text_vector)
         text_counts=self.emotionPredictor.getCountsOfTextPredictions()
-        
+        total_predicted_values=list(self.emotionPredictor.Text_Predictions)
+        behavior_mapping={
+            "aggressive_ness":len([x for x in total_predicted_values if x=="anger"])+len([x for x in total_predicted_values if x=="disgust"]),
+            "calmness":len([x for x in total_predicted_values if x=="happy"])+len([x for x in total_predicted_values if x=="sad"]),
+            "confidence":len([x for x in total_predicted_values if x=="happy"])+len([x for x in total_predicted_values if x=="fear"]),
+        }
         final_text_prediction=class_list[list(text_counts.values()).index(max(text_counts.values()))]
         min_text_prediction=class_list[list(text_counts.values()).index(min(text_counts.values()))]
         text_neutral_count=0
@@ -89,7 +116,8 @@ class Integrator:
             "total_predicted_values":sum(text_counts.values())
         }
         self.Report={
-            "text_data":self.text_data
+            "text_data":self.text_data,
+            "behavior_mapping":behavior_mapping,
         }
         return self.Report
 
@@ -99,10 +127,8 @@ class Integrator:
         text_counts=self.emotionPredictor.getCountsOfTextPredictions()
         audio_counts=self.emotionPredictor.getCountsOfAudioPredictions()
         fluency_output=self.preProcessor.getSpeechFluency(self.audio_file_path,number_of_seconds=10)
-        
         final_audio_prediction=class_list[list(audio_counts.values()).index(max(audio_counts.values()))]
         final_text_prediction=class_list[list(text_counts.values()).index(max(text_counts.values()))]
-        
         min_audio_prediction=class_list[list(audio_counts.values()).index(min(audio_counts.values()))]
         min_text_prediction=class_list[list(text_counts.values()).index(min(text_counts.values()))]
 
@@ -112,8 +138,12 @@ class Integrator:
         text_neutral_count=0
         for neutral_class in neutral_classes:
             text_neutral_count+=text_counts[neutral_class]
-
-
+        total_predicted_values=list(self.emotionPredictor.Text_Predictions)+list(self.emotionPredictor.Audio_Predictions)
+        behavior_mapping={
+            "aggressive_ness":len([x for x in total_predicted_values if x=="anger"])+len([x for x in total_predicted_values if x=="disgust"]),
+            "calmness":len([x for x in total_predicted_values if x=="happy"])+len([x for x in total_predicted_values if x=="sad"]),
+            "confidence":len([x for x in total_predicted_values if x=="happy"])+len([x for x in total_predicted_values if x=="fear"]),
+        }
         self.audio_data={
             "final_prediction":final_audio_prediction,
             "fluency_output":fluency_output,
@@ -134,6 +164,8 @@ class Integrator:
         self.Report={
             "audio_data":self.audio_data,
             "text_data":self.text_data,
+            "behavior_mapping":behavior_mapping,
+            "frequency":self.getWordCountStats()
         }
         return self.Report
 
@@ -143,8 +175,12 @@ class Integrator:
         audio_counts=self.emotionPredictor.getCountsOfAudioPredictions()
         video_counts=self.emotionPredictor.getCountsOfVideoPredictions()
         fluency_output=self.preProcessor.getSpeechFluency(self.audio_file_path,number_of_seconds=10)
-        
-        
+        total_predicted_values=list(self.emotionPredictor.Text_Predictions)+list(self.emotionPredictor.Audio_Predictions)+list(self.emotionPredictor.Video_Predictions)+list(self.emotionPredictor.Image_Predictions)
+        behavior_mapping={
+            "aggressive_ness":len([x for x in total_predicted_values if x=="anger"])+len([x for x in total_predicted_values if x=="disgust"]),
+            "calmness":len([x for x in total_predicted_values if x=="happy"])+len([x for x in total_predicted_values if x=="sad"]),
+            "confidence":len([x for x in total_predicted_values if x=="happy"])+len([x for x in total_predicted_values if x=="fear"]),
+        }
         print(self.images_predictions)
         print(image_counts)
         print(self.text_predictions)
@@ -259,7 +295,9 @@ class Integrator:
                 "positivity_value":final_positive_count,
                 "negativity_value":final_negative_count,
                 "total_predicted_values":sum(final_counts.values())
-            }
+            },
+            "behavior_mapping":behavior_mapping,
+            "frequency":self.getWordCountStats()
         }
         return self.Report
     def saveReport(self,file_path="Report.json"):

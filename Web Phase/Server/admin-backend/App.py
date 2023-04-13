@@ -59,6 +59,7 @@ def generateReport():
         )
         integrator.generateOutputs()
         report= integrator.getOutputs()
+        print(integrator.getWordCountStats())
         print(report)
         integrator.saveReport(f"./Data/Reports/{milliseconds_value}.json")
         Pre_SQL_Query=f"UPDATE files SET is_report_is_ready='Yes',report_file_name='{milliseconds_value}.json',report_creation_time=CURRENT_TIMESTAMP WHERE id={request.json['id']}"
