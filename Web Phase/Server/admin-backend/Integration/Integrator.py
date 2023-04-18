@@ -4,7 +4,7 @@ from .Variables import *
 import json
 class Integrator:
     def __init__(self):
-        print("⚡⚡⚡⚡Integrator is initialized⚡⚡⚡⚡")
+        print("Integrator is initialized")
         self.decomposer=Decomposer.Decomposer()
         self.preProcessor=ModelProcessor.PreProcessor()
         self.emotionPredictor=ModelProcessor.VideoEmotionPrediction()
@@ -62,9 +62,9 @@ class Integrator:
         self.text_predictions=self.emotionPredictor.getTextualPredictions(self.text_model,text_vector)
     @staticmethod
     def getInterviewResult(positives,negatives,neutrals,total,success_factor=0.6):
-        if (positives+neutrals)/total>success_factor:
+        if (positives)/total>success_factor:
             return "Higher Chance of Selection"
-        elif (negatives+neutrals/2)/total>=(1-success_factor):
+        elif (negatives)/total>=(1-success_factor):
             return "Less Chances of Selection"
         else:
             return "Neutral Result"
@@ -152,7 +152,7 @@ class Integrator:
         print(self.audio_predictions)
         print(audio_counts)
         print(self.video_predictions)
-        print(video_counts)
+        print("video_counts: ",video_counts)
         
         final_images_prediction=class_list[list(image_counts.values()).index(max(image_counts.values()))]
         final_audio_prediction=class_list[list(audio_counts.values()).index(max(audio_counts.values()))]

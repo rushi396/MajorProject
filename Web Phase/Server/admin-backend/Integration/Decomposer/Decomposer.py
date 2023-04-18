@@ -7,7 +7,7 @@ videoTOAudioConverter=VideoTOAudioConverter()
 
 class Decomposer:
     def __init__(self) -> None:
-        print("🚀🚀🚀Video Decomposer is initialized")
+        print("Video Decomposer is initialized")
     def setVideoFile(self,file_name):
         self.video_file=file_name
     def getImageArrayOfIntervals(self,number_of_seconds=5):

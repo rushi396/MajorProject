@@ -450,7 +450,7 @@ function Report() {
                                                     </>
                                                 ) : (
                                                     <>
-                                                        <h1 className='gray_color'>Result will be unpredictable</h1>
+                                                        <h1 className='gray_color'>Result is unpredictable</h1>
                                                         <img src="https://media.licdn.com/dms/image/C4E12AQGfOoM0fj-FrA/article-cover_image-shrink_720_1280/0/1621263843416?e=1678320000&v=beta&t=Zw2kEha7jljfV4s1itVIa3e5hCt6Yg2LoOeSIhtpgzw" alt="" />
                                                     </>
                                                 )
@@ -459,7 +459,7 @@ function Report() {
                                         </>
                                     )
                                 }
-                                <h1>The predicted Percentage of Hiring is <strong className='blue_color'>{parseInt(100 * (reportData.final_data.positivity_value + reportData.final_data.neutrality_value) / reportData.final_data.total_predicted_values)}% </strong></h1>
+                                <h1>The predicted Percentage of Hiring is <strong className='blue_color'>{parseInt(100 * ((reportData.final_data.positivity_value ) / reportData.final_data.total_predicted_values))}% </strong></h1>
                             </div>
                             <div className="printButton">
                                 <button onClick={() => { window.print() }}>Print Report</button>

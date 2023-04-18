@@ -2,7 +2,7 @@ import cv2
 
 class VideoFactorizer:
     def __init__(self) -> None:
-        print("🚀🚀🚀Video Factorizer is initialized🚀🚀🚀")
+        print("Video Factorizer is initialized")
     def getFramesArray(self,video_path,number_of_frames=5):
         video=cv2.VideoCapture(video_path)
         frame_per_seconds=video.get(cv2.CAP_PROP_FPS)

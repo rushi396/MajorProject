@@ -5,7 +5,7 @@ from .Variables import *
 
 class PreprocessInput:
     def __init__(self,face_cascade):
-        print("🚀🚀Image Processor is connected🚀🚀")
+        print("Image Processor is connected")
         self.face_cascade=face_cascade
     def preprocessInput(self,image_path):
         image_array=cv2.imread(image_path,cv2.IMREAD_GRAYSCALE)
@@ -54,7 +54,7 @@ class PreprocessInput:
 
 class ModelProcessor:
     def __init__(self):
-        print("🚀🚀🚀 Model Processor is Initialized🚀🚀")
+        print(" Model Processor is Initialized")
     def setModel(self,ModelPath):
         self.model=tensorflow.keras.models.load_model(ModelPath)
         print("Model is Connected")

@@ -36,7 +36,7 @@ class InputProcessor:
 
 class ModelProcessor:
     def __init__(self):
-        print("🚀🚀🚀 Model Processor is Initialized🚀🚀")
+        print("Model Processor is Initialized")
     def setModel(self,ModelPath):
         self.model=tensorflow.keras.models.load_model(ModelPath)
         print("Model is Connected")

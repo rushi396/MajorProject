@@ -13,11 +13,11 @@ english_stop_words=stopwords.words('english')
 
 class TextInputProcessor:
     def __init__(self):        
-        print("""🚀🚀🚀Text input Processor is Initialized🚀🚀🚀""")
+        print("""Text input Processor is Initialized""")
     def setVecorizer(self,path):
         with open(path,"rb") as f:
             self.Vectorizer=pickle.load(f)
-        print("🚀🚀Vectorizer is connected🚀🚀")
+        print("Vectorizer is connected")
     def getPreprocessedInput(self,inputText):
         inputText=Regular_expression_definition_for_html_tags.sub(r" ",inputText)
         inputText=Regular_expression_definition_for_digits.sub(r" ",inputText)
@@ -53,7 +53,7 @@ class TextInputProcessor:
 
 class TextSentimentAnalyser:
     def __init__(self):
-        print("""🚀🚀🚀Text input Analyzer is Initialized🚀🚀🚀""")
+        print("""Text input Analyzer is Initialized""")
     def setModel(self,path):    
         self.model=joblib.load(path)
         print("Text Analyzer Model is Connected")
