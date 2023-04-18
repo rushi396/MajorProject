@@ -367,56 +367,33 @@ function Report() {
                                     />
                                 </div>
 
-                                <div className="FinalResults">
-                                    <div className="finalResultDetails">
                                         <h2 className="centeredMainHeading">
-                                            Interview Emotion Statistics
+                                            Interview Emotion and Excepted Behavior Statistics
                                         </h2>
-                                        <section className="finalDetails">
-                                            <div className="specificEmotions">
-                                                <div style={{ background: "red" }}>
-                                                    😡Anger: <strong>{reportData.final_data.counts.anger}</strong>
-                                                </div>
-                                                <div style={{ background: "coral" }}>
-                                                    😞Disgust: <strong>{reportData.final_data.counts.disgust}</strong>
-                                                </div>
-                                                <div style={{ background: "gray" }}>
-                                                    😨Fear: <strong>{reportData.final_data.counts.fear}</strong>
-                                                </div>
-                                            </div>
-                                            <div className="specificEmotions">
-                                                <div style={{ background: "blue" }}>
-                                                    😀Happy: <strong>{reportData.final_data.counts.happy}</strong>
-                                                </div>
-                                                <div style={{ background: "#1B1464" }}>
-                                                    😔Sad: <strong>{reportData.final_data.counts.sad}</strong>
-                                                </div>
-                                                <div style={{ background: "green" }}>
-                                                    😱Surprise: <strong>{reportData.final_data.counts.surprise}</strong>
-                                                </div>
-                                            </div>
-                                            <div className="specificResults1">
-                                                <div style={{ background: "rgba(0, 128, 0, 0.551)" }}>
-                                                    Positivity Score : {reportData.final_data.positivity_value}
-                                                </div>
-                                                <div style={{ background: "rgba(255, 0, 0, 0.658)" }}>
-                                                    Negativity Score : {reportData.final_data.negativity_value}
-                                                </div>
-                                            </div>
-                                            <div className="specificResults2">
-                                                <div style={{ background: "rgba(0, 0, 255, 0.575)" }}>
-                                                    Neutrality Score : {reportData.final_data.neutrality_value}
-                                                </div>
-                                                <div style={{ background: "gray" }}>
-                                                    Total Score : {reportData.final_data.total_predicted_values}
-                                                </div>
-                                            </div>
-                                        </section>
+                                <div className="FinalResults">
+                                    <div className="Behaviours">
+                                        <div className="behaviour" style={{background:"green"}}>
+                                            Confidence: {(100*reportData.behavior_mapping.confidence/(reportData.behavior_mapping.aggressive_ness+reportData.behavior_mapping.calmness+reportData.behavior_mapping.confidence)).toFixed(1)}%
+                                        </div>
+                                        <div className="behaviour" style={{background:"blue"}}>
+                                            Calmness: {(100*reportData.behavior_mapping.calmness/(reportData.behavior_mapping.aggressive_ness+reportData.behavior_mapping.calmness+reportData.behavior_mapping.confidence)).toFixed(1)}%
+                                        </div>
+                                        <div className="behaviour" style={{background:"red"}}>
+                                            Agression: {(100*reportData.behavior_mapping.aggressive_ness/(reportData.behavior_mapping.aggressive_ness+reportData.behavior_mapping.calmness+reportData.behavior_mapping.confidence)).toFixed(1)}%
+                                        </div>
                                     </div>
                                     <div className="mainGraphs">
                                         <Chart
                                             options={{
-                                                labels: Object.keys(reportData.final_data.counts)
+                                                labels: Object.keys(reportData.final_data.counts),
+                                                colors: [
+                                                    "#e60000",
+                                                    "#ffa700",
+                                                    "#002bff",
+                                                    "#007000",
+                                                    "#000051",
+                                                    "#ffff43"
+                                                ]
                                             }}
                                             series={
                                                 Object.values(reportData.final_data.counts)
