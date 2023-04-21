@@ -6,7 +6,7 @@ from Functions import *
 textInputProcessor=TextInputProcessor()
 textInputProcessor.setVecorizer("../Model/Vectorizer.pickle")
 textSentimentAnalyser=TextSentimentAnalyser()
-textSentimentAnalyser.setModel("../Model/Model.joblib")
+textSentimentAnalyser.setModel("../Model/Text_NN_Model_50.h5")
 App=Flask(__name__)
 
 @App.route('/')
